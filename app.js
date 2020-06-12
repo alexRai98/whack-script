@@ -1,6 +1,7 @@
 'use strict';
 const log = console.log.bind(console);
 const App = {};
+let time = 21;
 
 function createHole() {
   const hole = document.createElement('DIV');
@@ -41,15 +42,59 @@ function createMole(type) {
   return mole;
 }
 
+function shuffle(array) {
+  array.sort(() => Math.random() - 0.5);
+}
 
-App.game = document.querySelector('.game');
-App.holes = [0, 0, 0].map(() => createHole());
-App.moles = ['monster', 'newbie'].map((type) => createMole(type));
+function getRandom(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
-App.game.append(...App.holes);
-App.activeHole = App.holes[1];
-App.activeMole = App.moles[0];
-App.activeHole.append(App.activeMole);
+function initGame(){
+  App.game = document.querySelector('.game');
+  App.holes = [0, 0, 0].map(() => createHole());
+  App.moles = ['monster', 'newbie'].map((type) => createMole(type));
+  App.game.append(...App.holes);
+}
+function showMole(){
+  App.activeMole.classList.add('up');
+}
+function hidedMole(){
+  App.activeMole.classList.remove('up');
+}
+function linkMoleToHole(){  
+  App.activeHole = App.holes[getRandom(0,App.holes.length)];
+  App.activeMole = App.moles[0];
+  App.activeHole.append(App.activeMole);
+}
+function startGame(){
+  for(let i=0; i<5; i++){
+    linkMoleToHole();
+    showMole();
+    setTimeout(hidedMole,500);
+  }
+}
+
+/************** Start Time *******************/
+
+function startTime(){
+  const idInternal = setInterval(()=> {
+    time --
+    buton.textContent = time;
+    if(time == 0) clearInterval(idInternal);
+  },1000)
+}
+
+function run(){
+  initGame();
+  startTime();
+  startGame();
+}
+const buton = document.querySelector(".timer");
+
+
+
+
 
 // En la console mostrar el topo activo
 //App.activeMole
