@@ -74,9 +74,9 @@ function initGame() {
   App.game = document.querySelector('.game');
   App.holes = [0, 0, 0, 0, 0, 0].map(() => createHole());
   App.moles = [
-    'regular', 'regular',
+    'regular', 'regular','regular',
     'newbie', 'newbie','newbie','newbie',
-    'monster',
+    'monster', 'monster',
   ].map((type) => createMole(type));
   App.game.innerHTML = '';
   App.game.append(...App.holes);
