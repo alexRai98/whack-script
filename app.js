@@ -212,13 +212,7 @@ function callRender() {
   }, 250);
 }
 
-<<<<<<< HEAD
-
-function run(){
-
-=======
 function run() {
->>>>>>> aa286986363c45e034d942b982c51546e97b627d
   initGame();
   playMole();
   callRender();
