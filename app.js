@@ -194,7 +194,9 @@ function callRender() {
   }, 250);
 }
 
+
 function run(){
+
   initGame();
   startTime();
   playMole();
