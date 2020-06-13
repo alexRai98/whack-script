@@ -1,4 +1,15 @@
 
+function time(time,buton){
+    for(let i=1; i<time ; i++){
+        buton.texContent = i;
+        delay(1000);
+    }
+}
+function run(){
+    time(buton);
+ }
+let buton = document.querySelector(".timer");
+buton.addEventListener("click",() => run())
 
 const moles = [
     {
