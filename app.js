@@ -4,7 +4,6 @@ const buton = document.querySelector(".timer");
 const stat = document.querySelector('.stats');
 const molesLives = {};
 const App = {};
-let time = 10;
 
 function createHole() {
   const hole = document.createElement('DIV');
@@ -27,17 +26,17 @@ function createMole(type) {
   switch (type) {
     case 'newbie':
       mole.dataset.lives = 1;
-      mole.dataset.transitionTime = 3;
+      mole.dataset.transitionTime = 1;
       mole.style.transition = 'all ' + mole.dataset.transitionTime + 's';
       break;
     case 'regular':
       mole.dataset.lives = 2;
-      mole.dataset.transitionTime = 2;
+      mole.dataset.transitionTime = 0.75;
       mole.style.transition = 'all ' + mole.dataset.transitionTime + 's';
       break;
     case 'monster':
       mole.dataset.lives = 3;
-      mole.dataset.transitionTime = 1;
+      mole.dataset.transitionTime = 0.5;
       mole.style.transition = 'all ' + mole.dataset.transitionTime + 's';
       break;
     default:
@@ -73,17 +72,14 @@ function getRandom(array) {
 
 function initGame() {
   App.game = document.querySelector('.game');
-  App.holes = [0, 0, 0].map(() => createHole());
-  App.moles = ['regular', 'newbie'].map((type) => createMole(type));
+  App.holes = [0, 0, 0, 0, 0, 0].map(() => createHole());
+  App.moles = [
+    'regular', 'regular',
+    'newbie', 'newbie',
+    'monster',
+  ].map((type) => createMole(type));
+  App.game.innerHTML = '';
   App.game.append(...App.holes);
-}
-
-function startTime() {
-  const idInterval = setInterval(() => {
-    time--;
-    buton.textContent = time;
-    if (time == 0) clearInterval(idInterval);
-  }, 1000);
 }
 
 function playMole() {
@@ -92,9 +88,13 @@ function playMole() {
     App.moles.filter((mole) => mole.dataset.lives > 0),
     App.activeMole,
   );
-  if (App.activeMole.dataset.lives === 0) return;
-  App.activeHole.append(App.activeMole);
 
+  if (App.activeMole.dataset.lives === 0) {
+    App.finished = true;
+    return;
+  }
+
+  App.activeHole.append(App.activeMole);
   setTimeout(() => App.activeMole.up(), 0);
 
   App.activeMole.addEventListener('click', function clickEvent() {
@@ -105,16 +105,15 @@ function playMole() {
   App.activeMole.addEventListener('transitionend', function transitionEvent() {
     App.activeMole.down();
     App.activeMole.removeEventListener('transitionend', transitionEvent);
-    if (time > 0) playMole();
+    if (
+      App.time > 0 &&
+      App.moles.filter((m) => m.dataset.lives > 0).length > 0
+    ) {
+      playMole();
+    } else {
+      App.finished = true;
+    }
   });
-
-  // App.activeMole.addEventListener('click', function clickEvent() {
-  //   App.activeMole.dataset.lives -= 1;
-  //   lg(App.activeMole.dataset.lives);
-  //   App.activeMole.down();
-  //   App.activeMole.removeEventListener('click', clickEvent);
-  //   if (time > 0) playMole();
-  // });
 }
 
 /******************** Counter lives *******************/
@@ -186,19 +185,52 @@ function renderStats() {
   }
 }
 
+function showResult() {
+  const p = document.createElement('P');
+  p.classList.add('endMessage');
+  if (App.moles.filter((m) => m.dataset.lives > 0).length > 0) {
+    p.textContent = 'You lost';
+  } else {
+    p.textContent = 'You won';
+  }
+  App.game.innerHTML = '';
+  App.game.append(p);
+}
+
 function callRender() {
   const intervalId = setInterval(() => {
+    App.time -= 0.25;
+    buton.textContent = Math.floor(App.time);
     counterLives();
     renderStats();
-    if (time === 0) clearInterval(intervalId);
+    if (App.time === 0 || App.finished) {
+      clearInterval(intervalId);
+      reset();
+      buton.textContent = 'Start again!';
+      showResult();
+    }
   }, 250);
 }
 
+<<<<<<< HEAD
 
 function run(){
 
+=======
+function run() {
+>>>>>>> aa286986363c45e034d942b982c51546e97b627d
   initGame();
-  startTime();
   playMole();
   callRender();
 }
+
+function reset() {
+  App.time = 10;
+  App.finished = false;
+  buton.addEventListener('click', function buttonClick() {
+    run();
+    buton.removeEventListener('click', buttonClick);
+  });
+}
+
+reset();
