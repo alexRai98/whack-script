@@ -75,7 +75,7 @@ function initGame() {
   App.holes = [0, 0, 0, 0, 0, 0].map(() => createHole());
   App.moles = [
     'regular', 'regular',
-    'newbie', 'newbie',
+    'newbie', 'newbie','newbie','newbie',
     'monster',
   ].map((type) => createMole(type));
   App.game.innerHTML = '';
@@ -219,7 +219,7 @@ function run() {
 }
 
 function reset() {
-  App.time = 10;
+  App.time = 25;
   App.finished = false;
   buton.addEventListener('click', function buttonClick() {
     run();
